@@ -14,7 +14,6 @@ Faculty Login: Create events, mark attendance, analyze participation.
 Admin Login: Manage events, users, and analytics.
 
 
-
 2. Event Management:
 
 Event creation, editing, and deletion.
@@ -22,7 +21,6 @@ Event creation, editing, and deletion.
 Event categorization (workshops, cultural fests, technical events, etc.).
 
 Capacity limits for each event.
-
 
 
 3. Student Attendance System:
@@ -34,7 +32,6 @@ Manual attendance marking by faculty if needed.
 Live attendance tracking for faculty and admin.
 
 
-
 4. Event Registration & Participation:
 
 Students can browse and register for upcoming events.
@@ -43,21 +40,17 @@ Confirmation emails and reminders.
 
 Event feedback collection after participation.
 
-
-
-
-
 ---
 
 Additional Features:
 
-✅ Event Notifications & Reminders – Students get reminders before events.
-✅ Event Certificates Generation – Auto-generate certificates for attendees.
-✅ Leaderboard & Rewards – Track student participation, award points.
-✅ Automated Reports & Analytics – Graphs on attendance trends.
-✅ Multimedia Gallery – Upload event photos and videos.
-✅ Discussion Forums – Students can discuss upcoming events.
-✅ Integration with University Portal – Sync with LMS or ERP.
+• Event Notifications & Reminders – Students get reminders before events.
+• Event Certificates Generation – Auto-generate certificates for attendees.
+• Leaderboard & Rewards – Track student participation, award points.
+• Automated Reports & Analytics – Graphs on attendance trends.
+• Multimedia Gallery – Upload event photos and videos.
+• Discussion Forums – Students can discuss upcoming events.
+• Integration with University Portal – Sync with LMS or ERP.
 
 
 ---
