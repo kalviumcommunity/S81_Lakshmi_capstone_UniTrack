@@ -1,3 +1,7 @@
+
+UniTrack - Capstone
+
+
 Here's a detailed model for an Event Management and Attendance System for a University, including students' login, faculty login, and admin login. I'll also include additional features to make it more comprehensive.
 
 
@@ -123,7 +127,3 @@ Tech Stack (Suggested)
 🔹 QR Code API: For easy attendance marking
 🔹 Cloud Storage: Firebase for images/certificates
 
-
----
-
-Would you like a basic prototype or a full project with UI design?
