@@ -1,10 +1,18 @@
-// routes/eventRoutes.js
 const express = require('express');
 const router = express.Router();
+const {
+  getAllEvents,
+  createEvent,
+  updateEvent
+} = require('../controllers/eventController');
 
-const { getAllEvents, createEvent } = require('../controllers/eventController'); // ✅ Import both
+// GET route to update an event
+router.get('/api/events', getAllEvents);
 
-router.get('/events', getAllEvents);
-router.post('/events', createEvent);
+// POST route to update an event
+router.post('/api/events', createEvent);
+
+// PUT route to update an event
+router.put('/api/events/:id', updateEvent);
 
 module.exports = router;
