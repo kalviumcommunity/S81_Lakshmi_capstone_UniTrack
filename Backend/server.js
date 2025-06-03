@@ -1,21 +1,27 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const eventRoutes = require('./routes/eventRoutes');
+
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import cors from 'cors';
+
+import authRoutes from './routes/auth.js';
+import eventRoutes from './routes/events.js';
+import attendanceRoutes from './routes/attendance.js';
+import leaderboardRoutes from './routes/leaderboard.js';
 
 dotenv.config();
 const app = express();
+
 app.use(cors());
-app.use(express.json());  // Required for reading JSON body
+app.use(express.json());
 
-app.use(eventRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
 
-const PORT = process.env.PORT || 3000;
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('MongoDB Connected');
-    app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
-  })
-  .catch((err) => console.error(err));
+const PORT = process.env.PORT || 5000;
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
+  .catch(err => console.error(err));
