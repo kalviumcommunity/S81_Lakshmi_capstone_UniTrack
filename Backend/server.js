@@ -4,8 +4,9 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
+
 import authRoutes from './routes/auth.js';
-import eventRoutes from './routes/events.js';
+import eventRoutes from './routes/eventRoutes.js';
 import attendanceRoutes from './routes/attendance.js';
 import leaderboardRoutes from './routes/leaderboard.js';
 
@@ -23,5 +24,7 @@ app.use('/api/leaderboard', leaderboardRoutes);
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
+  .then(() => app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`)))
   .catch(err => console.error(err));
+
+
