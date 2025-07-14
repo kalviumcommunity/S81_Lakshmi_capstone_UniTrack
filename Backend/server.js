@@ -3,19 +3,17 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-
-
 import authRoutes from './routes/auth.js';
 import eventRoutes from './routes/eventRoutes.js';
 import attendanceRoutes from './routes/attendance.js';
 import leaderboardRoutes from './routes/leaderboard.js';
 
 dotenv.config();
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/attendance', attendanceRoutes);
