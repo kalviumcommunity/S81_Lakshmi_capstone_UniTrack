@@ -132,8 +132,6 @@ Tech Stack (Suggested)
 🔹 QR Code API: For easy attendance marking
 🔹 Cloud Storage: Firebase for images/certificates
 
-
----
 Day-by day plan 
 
 Day 1: Setup & GitHub Project
@@ -245,4 +243,4 @@ Perform end-to-end testing for both frontend and backend.
 Fix any issues, improve performance, and finalize the project.
 
 Day 21: Final Submission
-Finalize your README.md with project instructions, setup, and usage.
+
