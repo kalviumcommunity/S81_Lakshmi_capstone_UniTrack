@@ -1,18 +1,11 @@
-const express = require('express');
+import express from 'express';
+import { getAllEvents, createEvent, updateEvent } from '../controllers/eventController.js';
+
 const router = express.Router();
-const {
-  getAllEvents,
-  createEvent,
-  updateEvent
-} = require('../controllers/eventController');
 
-// GET route to update an event
-router.get('/api/events', getAllEvents);
+// These paths are relative to /api/events
+router.get('/', getAllEvents);        // GET /api/events
+router.post('/', createEvent);        // POST /api/events
+router.put('/:id', updateEvent);      // PUT /api/events/:id
 
-// POST route to update an event
-router.post('/api/events', createEvent);
-
-// PUT route to update an event
-router.put('/api/events/:id', updateEvent);
-
-module.exports = router;
+export default router;

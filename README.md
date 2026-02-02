@@ -243,4 +243,4 @@ Perform end-to-end testing for both frontend and backend.
 Fix any issues, improve performance, and finalize the project.
 
 Day 21: Final Submission
-Finalize your README.md with project instructions, setup, and usage.
+
