@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700">
+  <rect x="20" y="20" width="960" height="660" fill="#fff" stroke="#ccc"/>
+  <text x="50" y="70" font-size="28" font-family="Arial" fill="#333">Attendance Marking</text>
+
+  <rect x="50" y="120" width="420" height="420" fill="#fafafa" stroke="#ddd"/>
+  <text x="70" y="160" font-size="16" fill="#333">Scan QR or enter Code</text>
+  <rect x="80" y="200" width="360" height="200" fill="#fff" stroke="#ccc"/>
+  <text x="200" y="320" font-size="48" fill="#999">[ QR ]</text>
+
+  <rect x="520" y="120" width="420" height="420" fill="#fff" stroke="#eee"/>
+  <text x="540" y="160" font-size="16" fill="#333">Live Attendance</text>
+  <text x="540" y="190" font-size="12" fill="#666">Present: 45</text>
+  <text x="540" y="210" font-size="12" fill="#666">Absent: 15</text>
+
+  <rect x="520" y="240" width="200" height="36" fill="#eee" stroke="#ccc"/>
+  <text x="540" y="266" font-size="12" fill="#333">Export CSV</text>
+</svg>
