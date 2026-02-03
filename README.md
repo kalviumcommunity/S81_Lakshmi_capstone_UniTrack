@@ -6,9 +6,8 @@ Here's a detailed model for an Event Management and Attendance System for a Univ
 
 ## 🚀 Deployed Backend
 
-**Backend API Link:** [https://your-deployed-backend-url.onrender.com](https://your-deployed-backend-url.onrender.com)
+**Backend API Link:** https://s81-lakshmi-capstone-unitrack-7.onrender.com
 
-*(Replace with actual Render.com deployment URL after deployment is complete)*
 
 All API endpoints are accessible via this URL. Backend is deployed on Render.com using Node.js + Express + MongoDB.
 
