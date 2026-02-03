@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700">
+  <rect x="20" y="20" width="960" height="660" fill="#fff" stroke="#ccc"/>
+  <text x="50" y="70" font-size="28" font-family="Arial" fill="#333">Event Details</text>
+
+  <rect x="50" y="110" width="640" height="220" fill="#fafafa" stroke="#ddd"/>
+  <text x="70" y="150" font-size="18" fill="#333">Event Title</text>
+  <text x="70" y="180" font-size="14" fill="#666">Organiser · Date · Venue</text>
+  <text x="70" y="210" font-size="13" fill="#444">Short description of the event goes here. Purpose and highlights listed.</text>
+
+  <rect x="720" y="110" width="220" height="150" fill="#f8f8f8" stroke="#eee"/>
+  <text x="740" y="150" font-size="14" fill="#333">Register</text>
+  <rect x="740" y="170" width="140" height="36" fill="#eee" stroke="#ccc"/>
+  <text x="760" y="195" font-size="12" fill="#333">Confirm Registration</text>
+
+  <text x="50" y="360" font-size="16" fill="#333">Attendees (sample)</text>
+  <rect x="50" y="380" width="300" height="200" fill="#fff" stroke="#eee"/>
+  <text x="70" y="410" font-size="12" fill="#666">• Student A</text>
+  <text x="70" y="435" font-size="12" fill="#666">• Student B</text>
+
+  <text x="720" y="280" font-size="14" fill="#333">QR Code</text>
+  <rect x="720" y="300" width="120" height="120" fill="#fff" stroke="#000"/>
+</svg>
