@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const attendanceSchema = new mongoose.Schema({
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Student', // make sure 'Student' model exists or update accordingly
+    ref: 'User', // References the User model
     required: true
   },
   eventId: {
