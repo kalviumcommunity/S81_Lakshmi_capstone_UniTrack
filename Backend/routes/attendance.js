@@ -1,17 +1,11 @@
 import express from 'express';
-import Attendance from '../models/Attendance.js';
+import { markAttendance, getAttendance, getStudentAttendance } from '../controllers/attendanceController.js';
+import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
-  const attendance = await Attendance.create(req.body);
-  res.json(attendance);
-});
-
-router.get('/:eventId', async (req, res) => {
-  const list = await Attendance.find({ eventId: req.params.eventId }).populate('studentId');
-  res.json(list);
-});
+router.post('/mark', auth, markAttendance);
+router.get('/event/:eventId', auth, getAttendance); // Faculty view
+router.get('/student/me', auth, getStudentAttendance); // Student view
 
 export default router;
-
