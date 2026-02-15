@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+  name: String,
+  email: { type: String, unique: true },
+  password: String,
+  role: { type: String, enum: ['student', 'faculty', 'admin'] },
+  interests: { type: [String], default: [] },
+  points: { type: Number, default: 0 }
 });
 
 const User = mongoose.model('User', userSchema);
