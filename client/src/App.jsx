@@ -1,80 +1,110 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [activeFeature, setActiveFeature] = useState(0)
-
-  const features = [
+  const [events] = useState([
     {
-      title: "Event Management",
-      icon: "📅",
-      desc: "Create, edit, and categorize university events seamlessly."
+      id: 1,
+      title: "AI & Future Tech Workshop",
+      date: "Oct 26, 2024 • 10:00 AM",
+      location: "Auditorium B",
+      seats: 100,
+      seatsLeft: 25,
+      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=500"
     },
     {
-      title: "Smart Attendance",
-      icon: "📱",
-      desc: "QR Code and Face Recognition for instant attendance marking."
+      id: 2,
+      title: "Annual Cultural Fest 2024",
+      date: "Nov 15, 2024 • 10:00 AM",
+      location: "University Grounds",
+      seats: 500,
+      seatsLeft: 158,
+      image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=500"
     },
     {
-      title: "Real-time Analytics",
-      icon: "📊",
-      desc: "Track participation trends and generate automated reports."
-    },
-    {
-      title: "Leaderboard & Rewards",
-      icon: "🏆",
-      desc: "Gamified participation with points and student rankings."
+      id: 3,
+      title: "Data Science Hackathon",
+      date: "Nov 15, 2024 • 4:00 AM",
+      location: "Innovation Hub",
+      seats: 30,
+      seatsLeft: 5,
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=500"
     }
-  ]
+  ])
 
   return (
-    <div className="app-container">
-      <div className="logo-container">
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
+    <div className="dashboard-container">
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="nav-title">UniTrack</div>
+        <div className="nav-actions">
+          <span className="nav-item">Welcome back, Lakshmi!🌟</span>
+          <span className="nav-icon">🔔</span>
+          <div className="avatar" style={{ background: 'url("https://i.pravatar.cc/150?u=a042581f4e29026024d") center/cover' }}></div>
+        </div>
+      </nav>
 
-      <h1>UniTrack</h1>
-      <p className="subtitle">
-        The Next-Gen University Event Management & Attendance System
-      </p>
+      <div className="grid-layout">
+        {/* Main Content */}
+        <div className="events-container">
+          <h2 className="section-title">Upcoming Events</h2>
+          <div className="cards-grid">
+            {events.map(event => (
+              <div key={event.id} className="event-card">
+                <div className="event-image" style={{ backgroundImage: `url(${event.image})` }}>
+                  <div className="event-badge">Upcoming</div>
+                </div>
+                <h3 className="event-title">{event.title}</h3>
+                <div className="event-info">
+                  📅 {event.date}
+                </div>
+                <div className="event-info">
+                  📍 {event.location}
+                </div>
 
-      <div className="card">
-        <button onClick={() => setActiveFeature((prev) => (prev + 1) % features.length)}>
-          Explore Feature: {features[activeFeature].title}
-        </button>
-        <p style={{ marginTop: '1rem', color: '#ccc' }}>
-          {features[activeFeature].desc}
-        </p>
-      </div>
+                <div className="progress-section">
+                  <div className="seats-text">
+                    <span>Seats Left: {event.seatsLeft}/{event.seats}</span>
+                    <span>{Math.round((event.seatsLeft / event.seats) * 100)}%</span>
+                  </div>
+                  <div className="progress-bar-bg">
+                    <div
+                      className="progress-bar-fill"
+                      style={{ width: `${(event.seatsLeft / event.seats) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
 
-      <div className="features-grid">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className="feature-card"
-            style={{
-              borderColor: activeFeature === index ? '#646cff' : 'rgba(255, 255, 255, 0.05)',
-              transform: activeFeature === index ? 'translateY(-5px)' : 'none'
-            }}
-            onClick={() => setActiveFeature(index)}
-          >
-            <span className="feature-icon">{feature.icon}</span>
-            <div className="feature-title">{feature.title}</div>
-            <div className="feature-desc">{feature.desc}</div>
+                <div className="card-actions">
+                  <button className="btn-register">Register</button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
 
-      <p className="read-the-docs">
-        Click on the logos to learn more about the tech stack
-      </p>
+        {/* Sidebar */}
+        <aside className="sidebar-panel">
+          <h3 className="sidebar-title">My Progress</h3>
+          <div className="progress-circle"></div>
+          <p className="progress-label">Participation Points</p>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem', color: '#A3AED0' }}>
+              <span>Workshops</span>
+              <span>12</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem', color: '#A3AED0' }}>
+              <span>Competitions</span>
+              <span>5</span>
+            </div>
+          </div>
+
+          <button className="btn-download">
+            <span>📥</span> Download Certificate
+          </button>
+        </aside>
+      </div>
     </div>
   )
 }
