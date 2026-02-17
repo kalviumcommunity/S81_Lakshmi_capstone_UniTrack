@@ -38,7 +38,7 @@ function App() {
       <nav className="navbar">
         <div className="nav-title">UniTrack</div>
         <div className="nav-actions">
-          <span className="nav-item">Welcome back, Aisha Rahman!</span>
+          <span className="nav-item">Welcome back, Lakshmi!🌟</span>
           <span className="nav-icon">🔔</span>
           <div className="avatar" style={{ background: 'url("https://i.pravatar.cc/150?u=a042581f4e29026024d") center/cover' }}></div>
         </div>
