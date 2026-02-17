@@ -35,7 +35,8 @@ const eventSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    index: true
   },
   attendees: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -50,6 +51,16 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+// Virtual for attendance records
+eventSchema.virtual('attendanceRecords', {
+  ref: 'Attendance',
+  localField: '_id',
+  foreignField: 'eventId'
 });
 
 const Event = mongoose.model('Event', eventSchema);

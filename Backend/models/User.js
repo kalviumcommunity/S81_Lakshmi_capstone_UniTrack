@@ -27,6 +27,23 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+// Virtual for events created by the user
+userSchema.virtual('events', {
+  ref: 'Event',
+  localField: '_id',
+  foreignField: 'createdBy'
+});
+
+// Virtual for attendance history
+userSchema.virtual('attendanceHistory', {
+  ref: 'Attendance',
+  localField: '_id',
+  foreignField: 'studentId'
 });
 
 const User = mongoose.model('User', userSchema);
