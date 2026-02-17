@@ -1,27 +1,43 @@
-
 import React from 'react';
+import { LayoutDashboard, Users, Calendar, Award, LogOut } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
-    return (
-        <aside className="sidebar-panel">
-            <h3 className="sidebar-title">My Progress</h3>
-            <div className="progress-circle"></div>
-            <p className="progress-label">Participation Points</p>
+    const navItems = [
+        { name: 'Student Dashboard', path: '/student', icon: <LayoutDashboard size={20} /> },
+        { name: 'Faculty Dashboard', path: '/faculty', icon: <Users size={20} /> },
+        { name: 'Admin Dashboard', path: '/admin', icon: <Calendar size={20} /> },
+    ];
 
-            <div style={{ marginBottom: '1.5rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem', color: '#A3AED0' }}>
-                    <span>Workshops</span>
-                    <span>12</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem', color: '#A3AED0' }}>
-                    <span>Competitions</span>
-                    <span>5</span>
-                </div>
+    return (
+        <aside className="sidebar-container">
+            <div className="sidebar-logo">
+                <h2 style={{ color: '#4318FF' }}>UniTrack</h2>
             </div>
 
-            <button className="btn-download">
-                <span>📥</span> Download Certificate
-            </button>
+            <div className="nav-links">
+                {navItems.map((item) => (
+                    <NavLink
+                        key={item.path}
+                        to={item.path}
+                        className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                    >
+                        {item.icon}
+                        <span>{item.name}</span>
+                    </NavLink>
+                ))}
+            </div>
+
+            <div className="sidebar-footer">
+                <div className="sidebar-card">
+                    <div className="progress-circle-mini">85%</div>
+                    <p className="card-text">Profile Complete</p>
+                </div>
+                <button className="logout-btn">
+                    <LogOut size={18} />
+                    <span>Logout</span>
+                </button>
+            </div>
         </aside>
     );
 };
