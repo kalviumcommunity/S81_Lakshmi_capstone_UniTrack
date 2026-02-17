@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event, onRegister }) => {
     const progressPercentage = Math.round((event.seatsLeft / event.seats) * 100);
 
     return (
@@ -31,7 +31,7 @@ const EventCard = ({ event }) => {
             </div>
 
             <div className="card-actions">
-                <button className="btn-register">Register</button>
+                <button className="btn-register" onClick={onRegister}>Register</button>
             </div>
         </div>
     );
