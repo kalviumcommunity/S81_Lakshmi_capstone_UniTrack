@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.js';
 import eventRoutes from './routes/eventRoutes.js';
 import attendanceRoutes from './routes/attendance.js';
 import leaderboardRoutes from './routes/leaderboard.js';
+import recommendationRoutes from './routes/recommendations.js';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/recommendations', recommendationRoutes);
 
 const PORT = process.env.PORT || 5000;
 
