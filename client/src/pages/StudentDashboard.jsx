@@ -12,7 +12,7 @@ const mockEvents = [
         location: "Auditorium B",
         seats: 100,
         seatsLeft: 25,
-        description: "Deep dive into the latest AI trends, focusing heavily on hands-on coding and real-world applications.",
+        description: "Deep dive into the latest AI trends, focusing heavily on hands-on coding and real-world applications. ",
         image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=500"
     },
     {
@@ -22,7 +22,7 @@ const mockEvents = [
         location: "University Grounds",
         seats: 500,
         seatsLeft: 158,
-        description: "The biggest university event of the year featuring music, dance, and drama performances from various colleges.",
+        description: "The biggest university event of the year featuring music, dance, and drama performances from various colleges. ",
         image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=500"
     },
     {
@@ -32,7 +32,7 @@ const mockEvents = [
         location: "Innovation Hub",
         seats: 30,
         seatsLeft: 5,
-        description: "24-hour hackathon to solve real-world data problems. Prizes worth $5000 up for grabs!",
+        description: "24-hour hackathon to solve real-world data problems. Prizes worth $5000 up for grabs! ",
         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=500"
     }
 ];
