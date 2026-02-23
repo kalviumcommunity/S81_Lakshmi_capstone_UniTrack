@@ -25,4 +25,5 @@ router.post('/mark', auth, markAttendance);
 router.get('/event/:eventId', auth, getAttendance); // Faculty view
 router.get('/student/me', auth, getStudentAttendance); // Student view
 
+
 export default router;
