@@ -1,15 +1,16 @@
 import React from 'react';
-
 import Navbar from '../components/Navbar';
+import { useAuth } from '../context/AuthContext';
 
 const FacultyDashboard = () => {
+    const { user } = useAuth();
     return (
         <div className="dashboard-content">
 
-            <Navbar name="Professor Smith" avatarUrl="https://i.pravatar.cc/150?u=faculty" />
+            <Navbar name={user?.name || "Professor"} avatarUrl="https://i.pravatar.cc/150?u=faculty" />
 
             <div className="welcome-banner faculty-banner">
-                
+
                 <div>
                     <h1>Faculty Dashboard 📚</h1>
                     <p>Manage your events and track student attendance.</p>

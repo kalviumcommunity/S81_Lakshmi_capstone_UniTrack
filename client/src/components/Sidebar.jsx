@@ -1,13 +1,26 @@
 import React from 'react';
 import { LayoutDashboard, Users, Calendar, Award, LogOut } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Sidebar = () => {
-    const navItems = [
-        { name: 'Student Dashboard', path: '/student', icon: <LayoutDashboard size={20} /> },
-        { name: 'Faculty Dashboard', path: '/faculty', icon: <Users size={20} /> },
-        { name: 'Admin Dashboard', path: '/admin', icon: <Calendar size={20} /> },
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
+    const allNavItems = [
+        { name: 'Student Dashboard', path: '/student', icon: <LayoutDashboard size={20} />, allowedRoles: ['student'] },
+        { name: 'Faculty Dashboard', path: '/faculty', icon: <Users size={20} />, allowedRoles: ['faculty'] },
+        { name: 'Admin Dashboard', path: '/admin', icon: <Calendar size={20} />, allowedRoles: ['admin'] },
     ];
+
+    const navItems = allNavItems.filter(item =>
+        user && item.allowedRoles.includes(user.role)
+    );
 
     return (
         <aside className="sidebar-container">
@@ -33,7 +46,7 @@ const Sidebar = () => {
                     <div className="progress-circle-mini">85%</div>
                     <p className="card-text">Profile Complete</p>
                 </div>
-                <button className="logout-btn">
+                <button className="logout-btn" onClick={handleLogout}>
                     <LogOut size={18} />
                     <span>Logout</span>
                 </button>

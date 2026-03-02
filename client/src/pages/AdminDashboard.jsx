@@ -1,10 +1,12 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
+import { useAuth } from '../context/AuthContext';
 
 const AdminDashboard = () => {
+    const { user } = useAuth();
     return (
         <div className="dashboard-content">
-            <Navbar name="System Admin" avatarUrl="https://i.pravatar.cc/150?u=admin" />
+            <Navbar name={user?.name || "System Admin"} avatarUrl="https://i.pravatar.cc/150?u=admin" />
 
             <div className="welcome-banner admin-banner">
                 <div>
