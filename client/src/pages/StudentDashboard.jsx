@@ -37,7 +37,10 @@ const mockEvents = [
     }
 ];
 
+import { useAuth } from '../context/AuthContext';
+
 const StudentDashboard = () => {
+    const { user } = useAuth();
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [hasParticipated, setHasParticipated] = useState(false); // Mock participation state
     const [showReason, setShowReason] = useState(false);
@@ -57,11 +60,11 @@ const StudentDashboard = () => {
 
     return (
         <div className="dashboard-content">
-            <Navbar name="Lakshmi" avatarUrl="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+            <Navbar name={user?.name || "Student"} avatarUrl="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
 
             <div className="welcome-banner">
                 <div>
-                    <h1>Welcome back, Lakshmi! 👋</h1>
+                    <h1>Welcome back, {user?.name || "Student"}! 👋</h1>
                     <p>Here's what's happening with your projects today.</p>
                 </div>
                 <button
