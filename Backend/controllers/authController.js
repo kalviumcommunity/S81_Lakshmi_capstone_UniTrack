@@ -9,9 +9,17 @@ export const registerUser = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
 
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Please provide all required fields' });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters' });
+        }
+
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists. Please log in.' });
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -69,7 +77,7 @@ export const loginUser = async (req, res) => {
 
 export const googleLogin = async (req, res) => {
     try {
-        const { token, role } = req.body;
+        const { token, role, isLogin, isRegister } = req.body;
         let payload;
 
         if (process.env.GOOGLE_CLIENT_ID !== 'your_google_client_id_here' && process.env.GOOGLE_CLIENT_ID) {
@@ -92,6 +100,9 @@ export const googleLogin = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (!user) {
+            if (isLogin) {
+                return res.status(404).json({ message: 'User not found. Please sign up first.' });
+            }
             // Creating a new user via Google Login
             user = await User.create({
                 name,
@@ -99,6 +110,10 @@ export const googleLogin = async (req, res) => {
                 googleId: sub,
                 role: role || 'student', // default role
             });
+        } else {
+            if (isRegister) {
+                return res.status(400).json({ message: 'User already exists. Please log in.' });
+            }
         }
 
         res.json({

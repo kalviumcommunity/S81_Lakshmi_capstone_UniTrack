@@ -1,52 +1,88 @@
-
-import React, { useState } from 'react';
-import { Calendar, Search, MapPin, Download, AlertCircle, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Search, MapPin, Download, AlertCircle, X, Camera, Check } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import EventCard from '../components/EventCard';
-
-const mockEvents = [
-    {
-        id: 1,
-        title: "AI & Future Tech Workshop",
-        date: "Oct 26, 2024 • 10:00 AM",
-        location: "Auditorium B",
-        seats: 100,
-        seatsLeft: 25,
-        description: "Deep dive into the latest AI trends, focusing heavily on hands-on coding and real-world applications. ",
-        image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=500"
-    },
-    {
-        id: 2,
-        title: "Annual Cultural Fest 2024",
-        date: "Nov 15, 2024 • 10:00 AM",
-        location: "University Grounds",
-        seats: 500,
-        seatsLeft: 158,
-        description: "The biggest university event of the year featuring music, dance, and drama performances from various colleges. ",
-        image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=500"
-    },
-    {
-        id: 3,
-        title: "Data Science Hackathon",
-        date: "Nov 15, 2024 • 4:00 AM",
-        location: "Innovation Hub",
-        seats: 30,
-        seatsLeft: 5,
-        description: "24-hour hackathon to solve real-world data problems. Prizes worth $5000 up for grabs! ",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=500"
-    }
-];
-
 import { useAuth } from '../context/AuthContext';
+import Webcam from 'react-webcam';
 
 const StudentDashboard = () => {
-    const { user } = useAuth();
+    const { user, token } = useAuth();
+    const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [hasParticipated, setHasParticipated] = useState(false); // Mock participation state
+    const [hasParticipated, setHasParticipated] = useState(false);
     const [showReason, setShowReason] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showCamera, setShowCamera] = useState(false);
+    const [capturedImage, setCapturedImage] = useState(null);
+    const [points, setPoints] = useState(120);
+    const webcamRef = React.useRef(null);
+
+    const handleCapture = React.useCallback(() => {
+        const imageSrc = webcamRef.current.getScreenshot();
+        setCapturedImage(imageSrc);
+    }, [webcamRef]);
+
+    const submitAttendance = () => {
+        setHasParticipated(true);
+        setPoints(p => p + 10);
+        setShowCamera(false);
+        setCapturedImage(null);
+        alert("Attendance marked successfully via Facial Recognition! You earned 10 points.");
+    };
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const res = await fetch('http://localhost:5000/api/events', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    setEvents(data);
+                } else {
+                    console.error('Failed to fetch events:', data.message);
+                }
+            } catch (err) {
+                console.error('Network error fetching events', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (token) fetchEvents();
+    }, [token]);
 
     const handleRegisterClick = (event) => {
         setSelectedEvent(event);
+    };
+
+    const confirmRegistration = async () => {
+        if (!selectedEvent) return;
+        try {
+            const res = await fetch(`http://localhost:5000/api/events/${selectedEvent._id}/register`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert(`Successfully registered for ${selectedEvent.title}!`);
+                setEvents(events.map(ev =>
+                    ev._id === selectedEvent._id ? data.event : ev
+                ));
+            } else {
+                alert(`Error: ${data.message}`);
+            }
+        } catch (err) {
+            alert('Failed to register. Please try again.');
+        } finally {
+            setSelectedEvent(null);
+        }
     };
 
     const attemptDownload = () => {
@@ -58,6 +94,8 @@ const StudentDashboard = () => {
         }
     };
 
+    const filteredEvents = events.filter(e => e.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
     return (
         <div className="dashboard-content">
             <Navbar name={user?.name || "Student"} avatarUrl="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
@@ -65,13 +103,18 @@ const StudentDashboard = () => {
             <div className="welcome-banner">
                 <div>
                     <h1>Welcome back, {user?.name || "Student"}! 👋</h1>
-                    <p>Here's what's happening with your projects today.</p>
+                    <p>Here's what's happening and events you can join.</p>
                 </div>
                 <button
                     className="toggle-participation-btn"
-                    onClick={() => setHasParticipated(!hasParticipated)}
+                    onClick={() => {
+                        if (!hasParticipated) {
+                            setShowCamera(true);
+                        }
+                    }}
+                    style={{ background: hasParticipated ? '#28a745' : '#4318FF' }}
                 >
-                    {hasParticipated ? "Participated (Mock)" : "Not Participated (Mock)"}
+                    {hasParticipated ? "Attendance Marked ✔️" : <><Camera size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} /> Mark Attendance</>}
                 </button>
             </div>
 
@@ -81,18 +124,36 @@ const StudentDashboard = () => {
                         <h2>Upcoming Events</h2>
                         <div className="search-bar">
                             <Search size={18} />
-                            <input type="text" placeholder="Search events..." />
+                            <input
+                                type="text"
+                                placeholder="Search events..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
                         </div>
                     </div>
 
                     <div className="cards-grid">
-                        {mockEvents.map(event => (
-                            <EventCard
-                                key={event.id}
-                                event={event}
-                                onRegister={() => handleRegisterClick(event)}
-                            />
-                        ))}
+                        {loading ? (
+                            <p>Loading events...</p>
+                        ) : filteredEvents.length > 0 ? (
+                            filteredEvents.map(event => (
+                                <EventCard
+                                    key={event._id}
+                                    event={{
+                                        ...event,
+                                        seats: event.maxParticipants,
+                                        seatsLeft: event.maxParticipants - (event.attendees?.length || 0),
+                                        location: event.venue,
+                                        image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=500", // placeholder
+                                        date: new Date(event.date).toLocaleDateString() + ' • ' + event.time
+                                    }}
+                                    onRegister={() => handleRegisterClick(event)}
+                                />
+                            ))
+                        ) : (
+                            <p>No events found.</p>
+                        )}
                     </div>
                 </div>
 
@@ -102,7 +163,7 @@ const StudentDashboard = () => {
                         <div className="progress-circle-large">
                             <span>75%</span>
                         </div>
-                        <p className="subtext">Participation Points: 120</p>
+                        <p className="subtext">Participation Points: {points}</p>
 
                         <div className="stats-list">
                             <div className="stat-item">
@@ -131,7 +192,6 @@ const StudentDashboard = () => {
                     <div className="panel-card calendar-card">
                         <h3>Calendar</h3>
                         <div className="mini-calendar">
-                            {/* Simplified calendar mockup */}
                             <div className="calendar-grid">
                                 {Array.from({ length: 30 }, (_, i) => (
                                     <div key={i} className={`day ${i === 15 ? 'active' : ''}`}>{i + 1}</div>
@@ -142,14 +202,13 @@ const StudentDashboard = () => {
                 </aside>
             </div>
 
-            {/* Event Details Modal */}
             {selectedEvent && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <button className="close-btn" onClick={() => setSelectedEvent(null)}>
                             <X size={24} />
                         </button>
-                        <img src={selectedEvent.image} alt={selectedEvent.title} className="modal-image" />
+                        <img src={"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=500"} alt={selectedEvent.title} className="modal-image" />
                         <div className="modal-details">
                             <span className="badge">UPCOMING</span>
                             <h2>{selectedEvent.title}</h2>
@@ -158,21 +217,63 @@ const StudentDashboard = () => {
                             <div className="info-row">
                                 <div className="info-item">
                                     <Calendar size={18} />
-                                    <span>{selectedEvent.date}</span>
+                                    <span>{new Date(selectedEvent.date).toLocaleDateString()} • {selectedEvent.time}</span>
                                 </div>
                                 <div className="info-item">
                                     <MapPin size={18} />
-                                    <span>{selectedEvent.location}</span>
+                                    <span>{selectedEvent.venue}</span>
                                 </div>
                             </div>
 
                             <div className="modal-actions">
-                                <button className="confirm-btn" onClick={() => {
-                                    alert(`Registered for ${selectedEvent.title}!`);
-                                    setSelectedEvent(null);
-                                }}>Confirm Registration</button>
+                                <button className="confirm-btn" onClick={confirmRegistration}>
+                                    Confirm Registration
+                                </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {showCamera && (
+                <div className="modal-overlay">
+                    <div className="modal-content" style={{ textAlign: 'center', maxWidth: '500px' }}>
+                        <button className="close-btn" onClick={() => { setShowCamera(false); setCapturedImage(null); }}>
+                            <X size={24} />
+                        </button>
+                        <h2>Facial Recognition Attendance</h2>
+                        <p style={{ marginBottom: '1rem', color: '#666' }}>Please position your face clearly in the camera to mark your attendance.</p>
+
+                        <div style={{ background: '#000', borderRadius: '10px', overflow: 'hidden', marginBottom: '1rem' }}>
+                            {!capturedImage ? (
+                                <Webcam
+                                    audio={false}
+                                    ref={webcamRef}
+                                    screenshotFormat="image/jpeg"
+                                    width="100%"
+                                    videoConstraints={{ facingMode: "user" }}
+                                />
+                            ) : (
+                                <img src={capturedImage} alt="Captured face" style={{ width: '100%' }} />
+                            )}
+                        </div>
+
+                        {!capturedImage ? (
+                            <button className="confirm-btn" onClick={handleCapture} style={{ width: '100%' }}>
+                                <Camera size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                                Capture Photo
+                            </button>
+                        ) : (
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <button className="btn-secondary" onClick={() => setCapturedImage(null)} style={{ flex: 1 }}>
+                                    Retake
+                                </button>
+                                <button className="confirm-btn" onClick={submitAttendance} style={{ flex: 1 }}>
+                                    <Check size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                                    Submit Attendance
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

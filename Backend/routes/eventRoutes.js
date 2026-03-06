@@ -1,11 +1,13 @@
 import express from 'express';
-import { getAllEvents, createEvent, updateEvent } from '../controllers/eventController.js';
+import { getAllEvents, createEvent, updateEvent, registerForEvent } from '../controllers/eventController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 // These paths are relative to /api/events
-router.get('/', getAllEvents);        // GET /api/events
-router.post('/', createEvent);        // POST /api/events
-router.put('/:id', updateEvent);      // PUT /api/events/:id
+router.get('/', protect, getAllEvents);        // GET /api/events
+router.post('/', protect, createEvent);        // POST /api/events
+router.put('/:id', protect, updateEvent);      // PUT /api/events/:id
+router.post('/:id/register', protect, registerForEvent); // POST /api/events/:id/register
 
 export default router;
