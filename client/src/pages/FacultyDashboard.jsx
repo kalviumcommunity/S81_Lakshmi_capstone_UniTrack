@@ -110,6 +110,26 @@ const FacultyDashboard = () => {
         }
     };
 
+    const handleDeleteEvent = async (eventId) => {
+        if (!window.confirm("Are you sure you want to delete this event?")) return;
+        try {
+            const res = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                setEvents(events.filter(e => e._id !== eventId));
+                if (selectedEvent && selectedEvent._id === eventId) setSelectedEvent(null);
+                alert("Event deleted successfully!");
+            } else {
+                const data = await res.json();
+                alert(`Error: ${data.message}`);
+            }
+        } catch (err) {
+            alert('Failed to delete event.');
+        }
+    };
+
     return (
         <div className="dashboard-content">
             <Navbar name={user?.name || "Professor"} avatarUrl={user?.profilePhoto || "https://i.pravatar.cc/150?u=faculty"} />
@@ -142,9 +162,12 @@ const FacultyDashboard = () => {
                                     <h3 className="event-title">{event.title}</h3>
                                     <div className="event-info">📅 {new Date(event.date).toLocaleDateString()}</div>
                                     <div className="event-info">👥 {event.attendees?.length || 0} Registrations</div>
-                                    <div className="card-actions">
-                                        <button className="btn-secondary" onClick={() => openManageAttendance(event)}>
+                                    <div className="card-actions" style={{ display: 'flex', gap: '10px' }}>
+                                        <button className="btn-secondary" onClick={() => openManageAttendance(event)} style={{ flex: 1 }}>
                                             Manage Attendance
+                                        </button>
+                                        <button className="btn-secondary" onClick={() => handleDeleteEvent(event._id)} style={{ color: '#dc3545', border: '1px solid #dc3545', background: 'transparent' }}>
+                                            Delete
                                         </button>
                                     </div>
                                 </div>

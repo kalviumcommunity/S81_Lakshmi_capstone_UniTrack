@@ -1,0 +1,100 @@
+.custom-calendar-widget {
+    background: #f4f6f8;
+    border-radius: 4px;
+    overflow: hidden;
+    font-family: inherit;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-header-custom {
+    background: #465769;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.calendar-header-custom button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    transition: transform 0.2s;
+}
+
+.calendar-header-custom button:hover {
+    transform: scale(1.1);
+}
+
+.calendar-body-custom {
+    padding: 1rem 1.5rem;
+}
+
+.days-of-week-custom {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    color: #718296;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.days-grid-custom {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    row-gap: 5px;
+}
+
+.day-cell-custom {
+    background: transparent;
+    color: #a3b4c6;
+    border: none;
+    padding: 0.4rem 0;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.day-cell-custom:not(.empty):hover {
+    background: #e0e6ed;
+    color: #465769;
+}
+
+.day-cell-custom.active-day-custom {
+    background: #fb7062 !important;
+    color: white !important;
+}
+
+.calendar-footer-custom {
+    padding: 1rem;
+    padding-top: 0.5rem;
+}
+
+.calendar-btn-custom {
+    width: 100%;
+    background: #38bcce;
+    border: none;
+    color: white;
+    padding: 0.85rem;
+    font-size: 1rem;
+    border-radius: 0;
+    cursor: pointer;
+    text-transform: capitalize;
+    transition: background 0.2s;
+}
+
+.calendar-btn-custom:hover {
+    background: #2ea0af;
+}

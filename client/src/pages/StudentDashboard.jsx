@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import EventCard from '../components/EventCard';
 import { useAuth } from '../context/AuthContext';
 import Webcam from 'react-webcam';
+import CustomCalendar from '../components/CustomCalendar';
 
 const StudentDashboard = () => {
     const { user, token } = useAuth();
@@ -13,6 +14,7 @@ const StudentDashboard = () => {
     const [showReason, setShowReason] = useState(false);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterDate, setFilterDate] = useState(null);
     const [showCamera, setShowCamera] = useState(false);
     const [capturedImage, setCapturedImage] = useState(null);
     const [points, setPoints] = useState(120);
@@ -128,7 +130,17 @@ const StudentDashboard = () => {
         }
     };
 
-    const filteredEvents = events.filter(e => e.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredEvents = events.filter(e => {
+        const matchesSearch = e.title.toLowerCase().includes(searchTerm.toLowerCase());
+        if (!filterDate) return matchesSearch;
+
+        const eventDate = new Date(e.date);
+        const matchesDate = eventDate.getDate() === filterDate.getDate() &&
+            eventDate.getMonth() === filterDate.getMonth() &&
+            eventDate.getFullYear() === filterDate.getFullYear();
+
+        return matchesSearch && matchesDate;
+    });
 
     return (
         <div className="dashboard-content">
@@ -223,15 +235,8 @@ const StudentDashboard = () => {
                         )}
                     </div>
 
-                    <div className="panel-card calendar-card">
-                        <h3>Calendar</h3>
-                        <div className="mini-calendar">
-                            <div className="calendar-grid">
-                                {Array.from({ length: 30 }, (_, i) => (
-                                    <div key={i} className={`day ${i === 15 ? 'active' : ''}`}>{i + 1}</div>
-                                ))}
-                            </div>
-                        </div>
+                    <div className="panel-card calendar-card" style={{ padding: 0, background: 'transparent', boxShadow: 'none' }}>
+                        <CustomCalendar selectedDate={filterDate} onDateSelect={setFilterDate} />
                     </div>
                 </aside>
             </div>
