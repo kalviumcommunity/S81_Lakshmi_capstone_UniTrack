@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './context/AuthContext';
+import WaterDropCursor from './components/WaterDropCursor';
 import './App.css';
 
 const AppLayout = () => {
@@ -16,33 +17,36 @@ const AppLayout = () => {
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
   return (
-    <div className={`app-container ${isAuthPage ? 'auth-layout' : ''}`}>
-      {user && !isAuthPage && <Sidebar />}
-      <div className={isAuthPage ? 'auth-content' : 'main-content'}>
-        <Routes>
-          <Route path="/login" element={!user ? <Login /> : <Navigate to={`/${user.role}`} />} />
-          <Route path="/register" element={!user ? <Register /> : <Navigate to={`/${user.role}`} />} />
+    <>
+      <WaterDropCursor />
+      <div className={`app-container ${isAuthPage ? 'auth-layout' : ''}`}>
+        {user && !isAuthPage && <Sidebar />}
+        <div className={isAuthPage ? 'auth-content' : 'main-content'}>
+          <Routes>
+            <Route path="/login" element={!user ? <Login /> : <Navigate to={`/${user.role}`} />} />
+            <Route path="/register" element={!user ? <Register /> : <Navigate to={`/${user.role}`} />} />
 
-          <Route element={<ProtectedRoute allowedRoles={['student', 'faculty', 'admin']} />}>
-            <Route path="/" element={<Navigate to="/student" replace />} />
-          </Route>
+            <Route element={<ProtectedRoute allowedRoles={['student', 'faculty', 'admin']} />}>
+              <Route path="/" element={<Navigate to="/student" replace />} />
+            </Route>
 
-          <Route element={<ProtectedRoute allowedRoles={['student']} />}>
-            <Route path="/student" element={<StudentDashboard />} />
-          </Route>
+            <Route element={<ProtectedRoute allowedRoles={['student']} />}>
+              <Route path="/student" element={<StudentDashboard />} />
+            </Route>
 
-          <Route element={<ProtectedRoute allowedRoles={['faculty']} />}>
-            <Route path="/faculty" element={<FacultyDashboard />} />
-          </Route>
+            <Route element={<ProtectedRoute allowedRoles={['faculty']} />}>
+              <Route path="/faculty" element={<FacultyDashboard />} />
+            </Route>
 
-          <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-            <Route path="/admin" element={<AdminDashboard />} />
-          </Route>
+            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+            </Route>
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

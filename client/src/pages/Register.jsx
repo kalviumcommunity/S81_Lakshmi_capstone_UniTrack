@@ -30,18 +30,19 @@ const Register = () => {
                 setError(data.message || 'Registration failed');
             }
         } catch (err) {
-            setError('Network error');
+            setError('Network error: Please ensure the backend server is running.');
         }
     };
 
     const handleGoogleSuccess = async (credentialResponse) => {
-        const decoded = jwtDecode(credentialResponse.credential);
+        const decoded = credentialResponse.isMock ? credentialResponse.profileObj : jwtDecode(credentialResponse.credential);
         try {
             const res = await fetch('http://localhost:5000/api/auth/google', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     token: credentialResponse.credential,
+                    isRegister: true,
                     role, // Pass selected role when registering via Google
                     googleUser: {
                         email: decoded.email,
@@ -94,12 +95,31 @@ const Register = () => {
                 <div className="divider">or continue with</div>
 
                 <div className="google-btn-wrapper">
-                    <GoogleLogin
-                        onSuccess={handleGoogleSuccess}
-                        onError={() => {
-                            setError('Google Sign Up failed');
-                        }}
-                    />
+                    {(!import.meta.env.VITE_GOOGLE_CLIENT_ID || import.meta.env.VITE_GOOGLE_CLIENT_ID === 'your_google_client_id_here') ? (
+                        <button
+                            type="button"
+                            className="auth-btn"
+                            style={{ backgroundColor: '#db4437', marginTop: 0 }}
+                            onClick={() => handleGoogleSuccess({
+                                isMock: true,
+                                profileObj: {
+                                    email: 'mockuser@gmail.com',
+                                    name: 'Mock User',
+                                    sub: 'mock_google_id_123'
+                                },
+                                credential: 'mock_token'
+                            })}
+                        >
+                            Sign Up with Google (Dev Mode)
+                        </button>
+                    ) : (
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={() => {
+                                setError('Google Sign Up failed');
+                            }}
+                        />
+                    )}
                 </div>
 
                 <p className="redirect-text">
