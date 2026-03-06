@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
     sparse: true,
     unique: true
   },
+  profilePhoto: {
+    type: String,
+    default: "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+  },
   role: {
     type: String,
     enum: ['student', 'faculty', 'admin'],

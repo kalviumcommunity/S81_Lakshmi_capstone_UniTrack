@@ -8,7 +8,12 @@ const FacultyDashboard = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [showCreateModal, setShowCreateModal] = useState(false);
     const [attendanceData, setAttendanceData] = useState({}); // { studentId: 'present' | 'absent' | 'late' }
+
+    const [newEvent, setNewEvent] = useState({
+        title: '', description: '', date: '', time: '', venue: '', category: 'academic', maxParticipants: 50
+    });
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -80,16 +85,61 @@ const FacultyDashboard = () => {
         }
     };
 
+    const handleCreateEvent = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch('http://localhost:5000/api/events', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ...newEvent, createdBy: user._id })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setEvents([data, ...events]);
+                setShowCreateModal(false);
+                setNewEvent({ title: '', description: '', date: '', time: '', venue: '', category: 'academic', maxParticipants: 50 });
+                alert("Event created successfully!");
+            } else {
+                alert(`Error: ${data.message}`);
+            }
+        } catch (err) {
+            alert('Failed to create event.');
+        }
+    };
+
+    const handleDeleteEvent = async (eventId) => {
+        if (!window.confirm("Are you sure you want to delete this event?")) return;
+        try {
+            const res = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                setEvents(events.filter(e => e._id !== eventId));
+                if (selectedEvent && selectedEvent._id === eventId) setSelectedEvent(null);
+                alert("Event deleted successfully!");
+            } else {
+                const data = await res.json();
+                alert(`Error: ${data.message}`);
+            }
+        } catch (err) {
+            alert('Failed to delete event.');
+        }
+    };
+
     return (
         <div className="dashboard-content">
-            <Navbar name={user?.name || "Professor"} avatarUrl="https://i.pravatar.cc/150?u=faculty" />
+            <Navbar name={user?.name || "Professor"} avatarUrl={user?.profilePhoto || "https://i.pravatar.cc/150?u=faculty"} />
 
             <div className="welcome-banner faculty-banner">
                 <div>
                     <h1>Faculty Dashboard 📚</h1>
                     <p>Manage your events and track student attendance.</p>
                 </div>
-                <button className="create-event-btn" onClick={() => alert("Create Event Flow - Coming Next!")}>
+                <button className="create-event-btn" onClick={() => setShowCreateModal(true)}>
                     + Create New Event
                 </button>
             </div>
@@ -112,9 +162,12 @@ const FacultyDashboard = () => {
                                     <h3 className="event-title">{event.title}</h3>
                                     <div className="event-info">📅 {new Date(event.date).toLocaleDateString()}</div>
                                     <div className="event-info">👥 {event.attendees?.length || 0} Registrations</div>
-                                    <div className="card-actions">
-                                        <button className="btn-secondary" onClick={() => openManageAttendance(event)}>
+                                    <div className="card-actions" style={{ display: 'flex', gap: '10px' }}>
+                                        <button className="btn-secondary" onClick={() => openManageAttendance(event)} style={{ flex: 1 }}>
                                             Manage Attendance
+                                        </button>
+                                        <button className="btn-secondary" onClick={() => handleDeleteEvent(event._id)} style={{ color: '#dc3545', border: '1px solid #dc3545', background: 'transparent' }}>
+                                            Delete
                                         </button>
                                     </div>
                                 </div>
@@ -215,6 +268,58 @@ const FacultyDashboard = () => {
                                 <p style={{ color: '#888', fontStyle: 'italic' }}>No students registered yet.</p>
                             )}
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {showCreateModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content" style={{ maxWidth: '500px' }}>
+                        <button className="close-btn" onClick={() => setShowCreateModal(false)}>
+                            <X size={24} />
+                        </button>
+                        <h2>Create New Event</h2>
+                        <form onSubmit={handleCreateEvent} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '1rem' }}>
+                            <div className="input-group">
+                                <label>Title</label>
+                                <input type="text" value={newEvent.title} onChange={e => setNewEvent({ ...newEvent, title: e.target.value })} required />
+                            </div>
+                            <div className="input-group">
+                                <label>Description</label>
+                                <textarea rows="3" value={newEvent.description} onChange={e => setNewEvent({ ...newEvent, description: e.target.value })} required style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
+                            </div>
+                            <div style={{ display: 'flex', gap: '15px' }}>
+                                <div className="input-group" style={{ flex: 1 }}>
+                                    <label>Date</label>
+                                    <input type="date" value={newEvent.date} onChange={e => setNewEvent({ ...newEvent, date: e.target.value })} required />
+                                </div>
+                                <div className="input-group" style={{ flex: 1 }}>
+                                    <label>Time</label>
+                                    <input type="time" value={newEvent.time} onChange={e => setNewEvent({ ...newEvent, time: e.target.value })} required />
+                                </div>
+                            </div>
+                            <div className="input-group">
+                                <label>Venue</label>
+                                <input type="text" value={newEvent.venue} onChange={e => setNewEvent({ ...newEvent, venue: e.target.value })} required />
+                            </div>
+                            <div style={{ display: 'flex', gap: '15px' }}>
+                                <div className="input-group" style={{ flex: 1 }}>
+                                    <label>Category</label>
+                                    <select value={newEvent.category} onChange={e => setNewEvent({ ...newEvent, category: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}>
+                                        <option value="academic">Academic</option>
+                                        <option value="sports">Sports</option>
+                                        <option value="cultural">Cultural</option>
+                                        <option value="workshop">Workshop</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div className="input-group" style={{ flex: 1 }}>
+                                    <label>Max Seats</label>
+                                    <input type="number" min="1" value={newEvent.maxParticipants} onChange={e => setNewEvent({ ...newEvent, maxParticipants: Number(e.target.value) })} required />
+                                </div>
+                            </div>
+                            <button type="submit" className="confirm-btn">Create Event</button>
+                        </form>
                     </div>
                 </div>
             )}
