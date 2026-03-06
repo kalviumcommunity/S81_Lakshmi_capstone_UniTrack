@@ -45,7 +45,8 @@ const Login = () => {
                     googleUser: {
                         email: decoded.email,
                         name: decoded.name,
-                        sub: decoded.sub
+                        sub: decoded.sub,
+                        picture: decoded.picture
                     }
                 }),
             });
@@ -91,7 +92,8 @@ const Login = () => {
                                 profileObj: {
                                     email: 'mockuser@gmail.com',
                                     name: 'Mock User',
-                                    sub: 'mock_google_id_123'
+                                    sub: 'mock_google_id_123',
+                                    picture: 'https://i.pravatar.cc/150?u=mockuser'
                                 },
                                 credential: 'mock_token'
                             })}

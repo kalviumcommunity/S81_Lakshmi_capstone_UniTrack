@@ -82,7 +82,7 @@ const FacultyDashboard = () => {
 
     return (
         <div className="dashboard-content">
-            <Navbar name={user?.name || "Professor"} avatarUrl="https://i.pravatar.cc/150?u=faculty" />
+            <Navbar name={user?.name || "Professor"} avatarUrl={user?.profilePhoto || "https://i.pravatar.cc/150?u=faculty"} />
 
             <div className="welcome-banner faculty-banner">
                 <div>

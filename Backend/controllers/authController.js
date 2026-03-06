@@ -37,6 +37,7 @@ export const registerUser = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            profilePhoto: user.profilePhoto,
             token: generateToken(user._id),
         });
     } catch (error) {
@@ -68,6 +69,7 @@ export const loginUser = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            profilePhoto: user.profilePhoto,
             token: generateToken(user._id),
         });
     } catch (error) {
@@ -95,7 +97,7 @@ export const googleLogin = async (req, res) => {
             }
         }
 
-        const { email, name, sub } = payload;
+        const { email, name, sub, picture } = payload;
 
         let user = await User.findOne({ email });
 
@@ -108,11 +110,16 @@ export const googleLogin = async (req, res) => {
                 name,
                 email,
                 googleId: sub,
+                profilePhoto: picture || "https://i.pravatar.cc/150?u=a042581f4e29026024d",
                 role: role || 'student', // default role
             });
         } else {
             if (isRegister) {
                 return res.status(400).json({ message: 'User already exists. Please log in.' });
+            }
+            if (picture && user.profilePhoto !== picture) {
+                user.profilePhoto = picture;
+                await user.save();
             }
         }
 
@@ -121,6 +128,7 @@ export const googleLogin = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            profilePhoto: user.profilePhoto,
             token: generateToken(user._id),
         });
     } catch (error) {

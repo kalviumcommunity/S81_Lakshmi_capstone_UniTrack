@@ -23,12 +23,46 @@ const StudentDashboard = () => {
         setCapturedImage(imageSrc);
     }, [webcamRef]);
 
-    const submitAttendance = () => {
-        setHasParticipated(true);
-        setPoints(p => p + 10);
-        setShowCamera(false);
-        setCapturedImage(null);
-        alert("Attendance marked successfully via Facial Recognition! You earned 10 points.");
+    const submitAttendance = async () => {
+        try {
+            // Pick an event they are registered for. 
+            // In a better flow, they would mark attendance from the specific event card.
+            const targetEvent = events.find(ev => ev.attendees?.some(a => (a._id || a) === user._id)) || events[0];
+            const targetEventId = targetEvent?._id;
+
+            if (!targetEventId) {
+                alert("No active events found to mark attendance.");
+                setShowCamera(false);
+                return;
+            }
+
+            const res = await fetch('http://localhost:5000/api/attendance', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    eventId: targetEventId,
+                    studentId: user._id,
+                    status: 'present'
+                })
+            });
+
+            if (res.ok) {
+                setHasParticipated(true);
+                setPoints(p => p + 10);
+                setShowCamera(false);
+                setCapturedImage(null);
+                alert("Attendance marked successfully via Facial Recognition! You earned 10 points.");
+            } else {
+                const data = await res.json();
+                alert(`Error marking attendance: ${data.message}`);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error trying to mark attendance.");
+        }
     };
 
     useEffect(() => {
@@ -98,7 +132,7 @@ const StudentDashboard = () => {
 
     return (
         <div className="dashboard-content">
-            <Navbar name={user?.name || "Student"} avatarUrl="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+            <Navbar name={user?.name || "Student"} avatarUrl={user?.profilePhoto || "https://i.pravatar.cc/150?u=a042581f4e29026024d"} />
 
             <div className="welcome-banner">
                 <div>
