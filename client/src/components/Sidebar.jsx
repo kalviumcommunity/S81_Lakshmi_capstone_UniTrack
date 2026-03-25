@@ -16,6 +16,7 @@ const Sidebar = () => {
         { name: 'Student Dashboard', path: '/student', icon: <LayoutDashboard size={20} />, allowedRoles: ['student'] },
         { name: 'Faculty Dashboard', path: '/faculty', icon: <Users size={20} />, allowedRoles: ['faculty'] },
         { name: 'Admin Dashboard', path: '/admin', icon: <Calendar size={20} />, allowedRoles: ['admin'] },
+        { name: 'Leaderboard', path: '/leaderboard', icon: <Award size={20} />, allowedRoles: ['student', 'faculty', 'admin'] },
     ];
 
     const navItems = allNavItems.filter(item =>
