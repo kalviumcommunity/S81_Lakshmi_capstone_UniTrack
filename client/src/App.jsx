@@ -6,6 +6,7 @@ import FacultyDashboard from './pages/FacultyDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Leaderboard from './pages/Leaderboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './context/AuthContext';
 import WaterDropCursor from './components/WaterDropCursor';
@@ -32,6 +33,10 @@ const AppLayout = () => {
 
             <Route element={<ProtectedRoute allowedRoles={['student']} />}>
               <Route path="/student" element={<StudentDashboard />} />
+            </Route>
+
+            <Route element={<ProtectedRoute allowedRoles={['student', 'faculty', 'admin']} />}>
+              <Route path="/leaderboard" element={<Leaderboard />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={['faculty']} />}>
